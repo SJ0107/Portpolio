@@ -88,6 +88,7 @@ const FlipCard = ({ title, description, images }) => {
 
 const Portpolio = () => {
     const [activeSection, setActiveSection] = useState('');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const sectionRefs = {
         home: useRef(null),
         about: useRef(null),
