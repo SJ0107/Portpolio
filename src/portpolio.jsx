@@ -207,7 +207,7 @@ const Portpolio = () => {
                             onClick={() => scrollToSection('about')}
                             className="bg-white text-blue-500 px-6 py-3 rounded-full font-bold hover:bg-blue-100 transition duration-300"
                         >
-                            Explore My Work
+                            My Work
                         </button>
                     </div>
                 </section>
