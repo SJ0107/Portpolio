@@ -2,9 +2,12 @@ import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import githubLogo from './github.png';
-import rainFireVideo from './Rain_Fire_720p_5000br.mp4';
-import project1Image from './chart.jpg';
-import project2Image from './myportpolio1.png';
+import rainFireVideo from './imgfile/Rain_Fire_720p_5000br.mp4';
+import project1 from './Project1 img/p1.png';
+import project1_1 from './Project1 img/p1-1.png';
+import project1_2 from './Project1 img/p1-2.png';
+import project1_3 from './Project1 img/p1-3.png';
+import project2Image from './Project2 img/myportpolio1.png';
 import reactIcon from './imgfile/react.png';
 import jsIcon from './imgfile/javascript.png';
 import cssIcon from './imgfile/css.png';
@@ -39,15 +42,19 @@ const SkillSection = ({ title, skills }) => (
 const FlipCard = ({ title, description, images }) => {
     const [isFlipped, setIsFlipped] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const timerRef = useRef(null);
 
     useEffect(() => {
-        const timer = setInterval(() => {
+        setCurrentImageIndex(0);
+        clearInterval(timerRef.current);
+
+        timerRef.current = setInterval(() => {
             if (!isFlipped) {
                 setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
             }
-        }, 3000); // 3초마다 이미지 변경
+        }, 3000);
 
-        return () => clearInterval(timer);
+        return () => clearInterval(timerRef.current);
     }, [images, isFlipped]);
 
     const handleClick = () => {
@@ -58,33 +65,31 @@ const FlipCard = ({ title, description, images }) => {
         <motion.div
             className="flip-card w-full max-w-6xl h-[600px] cursor-pointer mx-auto"
             onClick={handleClick}
-            animate={{ rotateY: isFlipped ? 180 : 0 }}
-            transition={{ duration: 0.6 }}
-            style={{ transformStyle: 'preserve-3d' }}
+            animate={{rotateY: isFlipped ? 180 : 0}}
+            transition={{duration: 0.6}}
+            style={{transformStyle: 'preserve-3d'}}
         >
             <div
                 className="flip-front absolute w-full h-full backface-hidden bg-white rounded-lg shadow-md flex flex-col items-center justify-center p-8"
-                style={{ backfaceVisibility: 'hidden' }}
+                style={{backfaceVisibility: 'hidden'}}
             >
                 <h3 className="text-3xl font-semibold mb-6">{title}</h3>
                 <div className="relative w-full h-[400px] mb-6">
-                    <img src={images[currentImageIndex]} alt={title} className="w-full h-full object-cover rounded-md" />
+                    <img src={images[currentImageIndex]} alt={title} className="w-full h-full object-cover rounded-md"/>
                 </div>
             </div>
             <div
-                className="flip-back absolute w-full h-full backface-hidden bg-gray-800 text-white rounded-lg shadow-md flex flex-col items-center justify-center p-8"
-                style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+                className="flip-back absolute w-full h-full backface-hidden bg-sky-400 text-white rounded-lg shadow-md flex flex-col p-8"
+                style={{backfaceVisibility: 'hidden', transform: 'rotateY(180deg)'}}
             >
-                <h3 className="text-3xl font-semibold mb-6">{title}</h3>
-                <p className="text-xl text-center">{description}</p>
+                <h3 className="text-3xl font-semibold mb-6 text-center">{title}</h3>
+                <div className="flex-grow overflow-y-auto">
+                    <p className="text-xl text-left">{description}</p>
+                </div>
             </div>
         </motion.div>
     );
 };
-
-
-
-
 
 const Portpolio = () => {
     const [activeSection, setActiveSection] = useState('');
@@ -92,8 +97,8 @@ const Portpolio = () => {
     const sectionRefs = {
         home: useRef(null),
         about: useRef(null),
-        projects: useRef(null),
         skills: useRef(null),
+        projects: useRef(null),
         contact: useRef(null),
     }
     const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
@@ -141,17 +146,12 @@ const Portpolio = () => {
         {
             title: "Project 1",
             description: "설명",
-            images: [project1Image, project2Image] // 여러 이미지 추가
+            images: [project1,project1_1,project1_2,project1_3] // 여러 이미지 추가
         },
         {
             title: "Project 2",
-            description: "설명",
-            images: [project2Image, project1Image] // 여러 이미지 추가
-        },
-        {
-            title: "Project 3",
-            description: "설명",
-            images: [project2Image, project1Image] // 여러 이미지 추가
+            description: "하이",
+            images: [project2Image] // 여러 이미지 추가
         }
     ];
 
