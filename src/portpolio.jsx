@@ -111,7 +111,7 @@ const Portpolio = () => {
 
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+    }, [sectionRefs]);
 
     const scrollToSection = (sectionId) => {
         sectionRefs[sectionId].current.scrollIntoView({behavior: 'smooth'});
