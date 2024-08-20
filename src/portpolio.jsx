@@ -19,6 +19,25 @@ import mysqlIcon from './imgfile/mysql.png';
 import oracleIcon from './imgfile/oracle.png';
 import slackIcon from './imgfile/slack.png';
 
+const TypingEffect = ({ text, speed, onComplete }) => {
+    const [displayText, setDisplayText] = useState('');
+    const index = useRef(0);
+
+    useEffect(() => {
+        if (index.current < text.length) {
+            const timer = setTimeout(() => {
+                setDisplayText((prev) => prev + text[index.current]);
+                index.current += 1;
+            }, speed);
+            return () => clearTimeout(timer);
+        } else if (onComplete) {
+            onComplete();
+        }
+    }, [displayText, text, speed, onComplete]);
+
+    return <>{displayText}</>;
+};
+
 const SkillItem = ({ icon, name }) => (
     <li className="bg-gray-200 p-4 rounded-lg shadow-md text-center flex flex-col items-center justify-center transition-transform hover:scale-105">
         <img src={icon} alt={name} className="w-10 h-10 mb-2" />
@@ -29,15 +48,13 @@ const SkillItem = ({ icon, name }) => (
 const SkillSection = ({ title, skills }) => (
     <div className="mb-12">
         <h3 className="text-2xl font-semibold mb-4">{title}</h3>
-        <ul className="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-10 gap-10 ba">
+        <ul className="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-10 gap-6">
             {skills.map((skill, index) => (
                 <SkillItem key={index} icon={skill.icon} name={skill.name} />
             ))}
         </ul>
     </div>
 );
-
-
 
 const FlipCard = ({ title, description, images }) => {
     const [isFlipped, setIsFlipped] = useState(false);
@@ -91,9 +108,10 @@ const FlipCard = ({ title, description, images }) => {
     );
 };
 
-const Portpolio = () => {
+const Portfolio = () => {
     const [activeSection, setActiveSection] = useState('');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const [showName, setShowName] = useState(false);
+    const [showButton, setShowButton] = useState(false);
     const sectionRefs = {
         home: useRef(null),
         about: useRef(null),
@@ -102,7 +120,6 @@ const Portpolio = () => {
         contact: useRef(null),
     }
     const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
-
 
     useEffect(() => {
         const handleScroll = () => {
@@ -146,12 +163,12 @@ const Portpolio = () => {
         {
             title: "Project 1",
             description: "설명",
-            images: [project1,project1_1,project1_2,project1_3] // 여러 이미지 추가
+            images: [project1,project1_1,project1_2,project1_3]
         },
         {
             title: "Project 2",
             description: "하이",
-            images: [project2Image] // 여러 이미지 추가
+            images: [project2Image]
         }
     ];
 
@@ -163,20 +180,19 @@ const Portpolio = () => {
         setCurrentProjectIndex((prevIndex) => (prevIndex - 1 + projects.length) % projects.length);
     };
 
-
     return (
         <div className="min-h-screen bg-gray-100">
-            <header className="fixed top-0 left-0 right-0 bg-white shadow-md z-10">
+            <header className="fixed top-0 left-0 right-0 bg-rgba(0, 0, 0, 0.7) shadow-md z-10">
                 <nav className="container mx-auto px-6 py-3 flex justify-between items-center">
                     <div className="text-xl font-bold"></div>
-                    <ul className="flex space-x-20 ">
+                    <ul className="flex space-x-8 md:space-x-20">
                         {['home', 'about', 'skills', 'projects', 'contact'].map((item) => (
                             <li key={item}>
                                 <button
                                     onClick={() => scrollToSection(item)}
                                     className={`capitalize ${
-                                        activeSection === item ? 'text-blue-500' : 'text-gray-600'
-                                    }`}
+                                        activeSection === item ? 'text-[#00E5FF]' : 'text-[#FFFFFF]'
+                                    } hover:text-blue-300 transition-colors`}
                                 >
                                     {item}
                                 </button>
@@ -201,30 +217,49 @@ const Portpolio = () => {
                         Your browser does not support the video tag.
                     </video>
                     <div className="relative z-10 text-center text-white">
-                        <h1 className="text-5xl font-bold mb-4">Welcome to My Portfolio</h1>
-                        <p className="text-xl mb-8">Lee Seung Jun</p>
-                        <button
-                            onClick={() => scrollToSection('about')}
-                            className="bg-white text-blue-500 px-6 py-3 rounded-full font-bold hover:bg-blue-100 transition duration-300"
-                        >
-                            My Work
-                        </button>
+                        <h1 className="text-5xl font-bold mb-4">
+                            <TypingEffect
+                                text="Welcome to My Portfolio"
+                                speed={100}
+                                onComplete={() => setShowName(true)}
+                            />
+                        </h1>
+                        {showName && (
+                            <p className="text-xl mb-8">
+                                <TypingEffect
+                                    text="Lee Seung Jun"
+                                    speed={100}
+                                    onComplete={() => setShowButton(true)}
+                                />
+                            </p>
+                        )}
+                        {showButton && (
+                            <motion.button
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.5 }}
+                                onClick={() => scrollToSection('about')}
+                                className="bg-white text-blue-500 px-6 py-3 rounded-full font-bold hover:bg-blue-100 transition duration-300"
+                            >
+                                My Work
+                            </motion.button>
+                        )}
                     </div>
                 </section>
 
-                <section ref={sectionRefs.about} className="min-h-screen flex items-center justify-center bg-white">
+                <section ref={sectionRefs.about} className="min-h-screen flex items-center justify-center bg-[#FBE0C3]">
                     <div className="container mx-auto px-6 py-12">
-                        <h2 className="text-4xl font-bold mb-4">About Me</h2>
-                        <p className="text-lg text-center">
+                        <h2 className="text-4xl font-bold mb-8 text-left">About Me</h2>
+                        <p className="text-lg text-center max-w-3xl mx-auto">
                             가치관 입력
                         </p>
                     </div>
                 </section>
 
                 <section ref={sectionRefs.skills}
-                         className="min-h-screen flex items-center justify-center bg-white py-16">
-                    <div className="container mx-auto px-10">
-                        <h2 className="text-4xl font-bold mb-5 text-center">Skills</h2>
+                         className="min-h-screen flex items-center justify-center bg-[#FFBB98] py-16">
+                    <div className="container mx-auto px-6">
+                        <h2 className="text-4xl font-bold mb-8 text-center">Skills</h2>
                         <SkillSection title="Frontend" skills={frontendSkills}/>
                         <SkillSection title="Backend" skills={backendSkills}/>
                         <SkillSection title="Etc" skills={etcSkills}/>
@@ -232,9 +267,8 @@ const Portpolio = () => {
                 </section>
 
                 <section ref={sectionRefs.projects}
-                         className="min-h-screen flex items-center justify-center bg-gray-100 py-20">
+                         className="min-h-screen flex items-center justify-center bg-[#7D8E95] py-20">
                     <div className="container mx-auto px-6">
-
                         <div className="relative">
                             <FlipCard {...projects[currentProjectIndex]} />
                             <button
@@ -253,16 +287,13 @@ const Portpolio = () => {
                     </div>
                 </section>
 
-
                 <section ref={sectionRefs.contact}
-                         className="min-h-screen flex items-center justify-center bg-gray-100">
-                    <div className="container mx-auto px-6 py-12 text-center">
-                        <h2 className="text-4xl font-bold mb-4">Contact</h2>
-                        <p>Email : dhsl357@naver.com</p>
-                        <br/>
-                        <a href={"https://github.com/SJ0107"} className="inline-block">
-                            <img src={githubLogo} alt="github"
-                                 className="Github w-20 h-15 "/>
+                         className="min-h-screen flex items-center justify-center bg-[#344648]">
+                    <div className="container mx-auto px-6 py-12 text-center text-white">
+                        <h2 className="text-4xl font-bold mb-8">Contact</h2>
+                        <p className="text-xl mb-6">Email: dhsl357@naver.com</p>
+                        <a href="https://github.com/SJ0107" className="inline-block transition-transform hover:scale-110">
+                            <img src={githubLogo} alt="github" className="w-20 h-20"/>
                         </a>
                     </div>
                 </section>
@@ -271,5 +302,4 @@ const Portpolio = () => {
     );
 };
 
-
-export default Portpolio;
+export default Portfolio;
