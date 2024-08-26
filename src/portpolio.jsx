@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, {useRef, useState, useEffect, useCallback} from 'react';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import githubLogo from './github.png';
@@ -26,7 +26,10 @@ const TypingEffect = ({ text, speed, onComplete }) => {
     useEffect(() => {
         if (index.current < text.length) {
             const timer = setTimeout(() => {
-                setDisplayText((prev) => prev + text[index.current]);
+                const nextChar = text[index.current];
+                if (nextChar !== undefined) {
+                    setDisplayText((prev) => prev + nextChar);
+                }
                 index.current += 1;
             }, speed);
             return () => clearTimeout(timer);
@@ -35,7 +38,7 @@ const TypingEffect = ({ text, speed, onComplete }) => {
         }
     }, [displayText, text, speed, onComplete]);
 
-    return <>{displayText}</>;
+    return <span>{displayText}</span>;
 };
 
 const SkillItem = ({ icon, name }) => (
@@ -107,7 +110,6 @@ const FlipCard = ({ title, description, images }) => {
         </motion.div>
     );
 };
-
 const Portfolio = () => {
     const [activeSection, setActiveSection] = useState('');
     const [showName, setShowName] = useState(false);
@@ -235,9 +237,9 @@ const Portfolio = () => {
                         )}
                         {showButton && (
                             <motion.button
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ duration: 0.5 }}
+                                initial={{opacity: 0}}
+                                animate={{opacity: 1}}
+                                transition={{duration: 0.5}}
                                 onClick={() => scrollToSection('about')}
                                 className="bg-white text-blue-500 px-6 py-3 rounded-full font-bold hover:bg-blue-100 transition duration-300"
                             >
@@ -292,7 +294,8 @@ const Portfolio = () => {
                     <div className="container mx-auto px-6 py-12 text-center text-white">
                         <h2 className="text-4xl font-bold mb-8">Contact</h2>
                         <p className="text-xl mb-6">Email: dhsl357@naver.com</p>
-                        <a href="https://github.com/SJ0107" className="inline-block transition-transform hover:scale-110">
+                        <a href="https://github.com/SJ0107"
+                           className="inline-block transition-transform hover:scale-110">
                             <img src={githubLogo} alt="github" className="w-20 h-20"/>
                         </a>
                     </div>
