@@ -114,6 +114,7 @@ const Portfolio = () => {
     const [activeSection, setActiveSection] = useState('');
     const [showName, setShowName] = useState(false);
     const [showButton, setShowButton] = useState(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const sectionRefs = {
         home: useRef(null),
         about: useRef(null),
